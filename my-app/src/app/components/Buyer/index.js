@@ -53,7 +53,7 @@ const SellersList = ({ userType }) => {
   const handleCreateSeller = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('https://renting-meets-simplicity.onrender.com/api/sellers', {
+      const response = await fetch('http://localhost:1337/api/sellers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -85,7 +85,7 @@ const SellersList = ({ userType }) => {
 
   return (
     <div className="main">
-      <h1>Responsive Rental_Meet_FrontEnd</h1>
+      <h1>Responsive Card Grid Layout</h1>
       {userType === "seller" && (
         <div className="operation-buttons">
           <Button variant="contained" onClick={() => setShowCreateModal(true)}>Create</Button>
