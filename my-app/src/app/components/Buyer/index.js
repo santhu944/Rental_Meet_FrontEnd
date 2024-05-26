@@ -4,13 +4,14 @@ import Button from '@mui/material/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Dialog from '@mui/material/Dialog'; // Import Dialog component from Material-UI
+import Dialog from '@mui/material/Dialog'; 
+import navbarLogo from "@/app/assets/store_badge.svg";
 import "./styles.css"
 
 const Navbar = ({ setUserType }) => {
   return (
     <nav className="navbar">
-      <img src="../../responsive navbar.gif" width="50" alt="a logo" />
+      <img src={navbarLogo} width="50" alt="a logo" />
       <div>
         <ul className="menu_list">
           <Button variant="contained"  onClick={() => setUserType("buyer")}>Buyer</Button>
@@ -35,6 +36,8 @@ const SellersList = ({ userType }) => {
     rent_img: ""
   });
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showDeleteMessage, setShowDeleteMessage] = useState(false);
+  const [showEditMessage, setShowEditMessage] = useState(false);
 
   useEffect(() => {
     fetchSellers();
@@ -53,7 +56,7 @@ const SellersList = ({ userType }) => {
   const handleCreateSeller = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('http://localhost:1337/api/sellers', {
+      const response = await fetch('https://renting-meets-simplicity.onrender.com/api/sellers', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -79,13 +82,32 @@ const SellersList = ({ userType }) => {
     }
   };
 
+  const handleDeleteSeller = async (sellerId) => {
+    try {
+      const response = await fetch(`https://renting-meets-simplicity.onrender.com/api/sellers/${sellerId}`, {
+        method: 'DELETE'
+      });
+      const data = await response.json();
+      console.log("Seller deleted:", data);
+      setShowDeleteMessage(true);
+      fetchSellers();
+      toast.success("Seller deleted successfully!");
+    } catch (error) {
+      console.error('Error deleting seller:', error);
+    }
+  };
+
+  const handleEditSeller = (sellerId) => {
+    setShowEditMessage(true);
+  };
+
   const handleChange = (event) => {
     setFormData({ ...formData, [event.target.name]: event.target.value });
   };
 
   return (
     <div className="main">
-      <h1>Responsive Card Grid Layout</h1>
+      <h1>presidio-hiring-challenge</h1>
       {userType === "seller" && (
         <div className="operation-buttons">
           <Button variant="contained" onClick={() => setShowCreateModal(true)}>Create</Button>
@@ -105,8 +127,16 @@ const SellersList = ({ userType }) => {
                 <p className="card_text">Bathrooms: {seller.attributes.No_Of_Bathrooms}</p>
                 <p className="card_text">Hospitals Nearby: {seller.attributes.No_Of_Hospital}</p>
                 <p className="card_text">Colleges Nearby: {seller.attributes.No_Of_College}</p>
-                <button className="btn card_btn">Read More</button>
+                <button className="btn card_btn">Read More</button>      
+
+                {userType === "seller" && (
+                  <>
+                    <Button className="btn card_btn" onClick={() => handleEditSeller(seller.id)}>Edit</Button>
+                    <Button className="btn card_btn" startIcon={<DeleteIcon />} onClick={() => handleDeleteSeller(seller.id)}>Delete</Button>
+                  </>
+                )}          
               </div>
+              
             </div>
           </li>
         ))}
