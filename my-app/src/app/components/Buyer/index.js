@@ -85,7 +85,7 @@ const SellersList = ({ userType }) => {
 
   return (
     <div className="main">
-      <h1>Responsive Card Grid Layout</h1>
+      <h1>Responsive Rental_Meet_FrontEnd</h1>
       {userType === "seller" && (
         <div className="operation-buttons">
           <Button variant="contained" onClick={() => setShowCreateModal(true)}>Create</Button>
